@@ -1,5 +1,5 @@
 venv
-lock.tf
+*lock.tf
 *.logs
 *.png
 *.lock
