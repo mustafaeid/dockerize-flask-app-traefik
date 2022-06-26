@@ -1,0 +1,8 @@
+venv
+lock.tf
+*.logs
+*.png
+*.lock
+Pipfile
+External Libraries
+.idea

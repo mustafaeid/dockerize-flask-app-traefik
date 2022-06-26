@@ -1,0 +1,10 @@
+passwords.txt
+logs/
+.git
+.cache
+**/*.class
+*.iso
+*.xlsx
+venv
+.venv
+
