@@ -1,5 +1,31 @@
 version: '3'
 services:
+  web:
+    container_name: web-flask
+    build: .
+    ports:
+      - "8080:5000"
+    networks:
+      - private flask
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`web.localhost`)"
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    image: mysql/mysql-server
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    volumes:
+      - ~/mysql:/var/lib/mysql
+    networks:
+      - private flask
+    ports:
+      - "32000:3306"
+    restart: always
+
   reverse-proxy:
     # The official v2 Traefik docker image
     image: traefik:v2.7
@@ -12,32 +38,14 @@ services:
       - "8081:8080"
     volumes:
       # So that Traefik can listen to the Docker events
-      - /var/run/docker.sock:/var/run/docker.sock
-  web:
-    container_name: web-flask
-    build: .
-    ports:
-      - "8080:5000"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - private flask
     depends_on:
-      - mysql
-
-  mysql:
-    container_name: mysql
-    image: mysql/mysql-server
-    environment:
-      - MYSQL_ROOT_PASSWORD=P4SSw0rd0!
-    volumes:
-      - dump-sql:/var/lib/mysql
-    networks:
-      - private flask
-    ports:
-      - "8807:3306"
-    restart: always
+      - web
 
 networks:
   private flask:
 
-volumes:
-  dump-sql:
+#volumes:
+#  dump-sql:
